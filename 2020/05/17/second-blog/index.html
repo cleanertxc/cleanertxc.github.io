@@ -1,0 +1,140 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="2.1 Information Storage">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter 2 Representing and Manipulating Information">
+<meta property="og:url" content="http://xichentan.com/2020/05/17/second-blog/index.html">
+<meta property="og:site_name" content="Xichen Tan">
+<meta property="og:description" content="2.1 Information Storage">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://xichentan.com/2020/05/17/second-blog/second-blog/1.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/17/second-blog/second-blog/2.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/17/second-blog/second-blog/3.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/17/second-blog/second-blog/4.png">
+<meta property="article:published_time" content="2020-05-17T05:18:22.000Z">
+<meta property="article:modified_time" content="2020-05-30T17:14:24.000Z">
+<meta property="article:author" content="Xichen Tan">
+<meta property="article:tag" content="CSAPP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xichentan.com/2020/05/17/second-blog/second-blog/1.png"><meta name="keywords" content="Xichen Tan, Xichen Tan"><meta name="description" content=""><title>Chapter 2 Representing and Manipulating Information | Xichen Tan</title><link ref="canonical" href="http://xichentan.com/2020/05/17/second-blog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"Copy","copySuccess":"Copy Success","copyError":"Copy Error"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">Home</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">Archives</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">Categories</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">Tags</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Xichen Tan</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Chapter 2 Representing and Manipulating Information</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">Created</span><span class="post-meta-item__value">2020-05-17</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">Updated</span><span class="post-meta-item__value">2020-05-30</span></span></div></header><div class="post-body">
+        <h2 id="2-1-Information-Storage"   >
+          <a href="#2-1-Information-Storage" class="heading-link"><i class="fas fa-link"></i></a>2.1 Information Storage</h2>
+      <a id="more"></a>
+<p>C语言编译版本和命令行的对应关系：<br>|C version| GCC command-line option|<br>|:–:|:–:|<br>|GNU 89|none,-std=gnu89|<br>|ANSI,ISO C90|-ansi,-std=c89|<br>|ISO C99|-std=c99|<br>|ISO C11|-std=c11|</p>
+
+        <h3 id="2-1-3-Addressing-and-Byte-Ordering"   >
+          <a href="#2-1-3-Addressing-and-Byte-Ordering" class="heading-link"><i class="fas fa-link"></i></a>2.1.3 Addressing and Byte Ordering</h3>
+      <p>机器存储数据有两种方式</p>
+<ul>
+<li>little endian: the least significant byte comes first</li>
+<li>big endian: the most significant byte comes first</li>
+</ul>
+
+        <h3 id="2-1-8-Logical-Operations-in-C"   >
+          <a href="#2-1-8-Logical-Operations-in-C" class="heading-link"><i class="fas fa-link"></i></a>2.1.8 Logical Operations in C</h3>
+      <ul>
+<li>logical operators do not evaluate their second argument if the result of the expression can be determined by evaluating the first argument.</li>
+</ul>
+
+        <h3 id="2-1-9-Shift-Operations-in-C"   >
+          <a href="#2-1-9-Shift-Operations-in-C" class="heading-link"><i class="fas fa-link"></i></a>2.1.9 Shift Operations in C</h3>
+      <ul>
+<li>C里面没有明确区分逻辑右移和算数右移，都是用<code>&gt;&gt;</code>表示，编译器也会默认结合两者使用，但是java里面<code>&gt;&gt;</code>是算数右移，<code>&gt;&gt;&gt;</code>是逻辑右移。</li>
+</ul>
+
+        <h2 id="2-2-Integer-Representations"   >
+          <a href="#2-2-Integer-Representations" class="heading-link"><i class="fas fa-link"></i></a>2.2 Integer Representations</h2>
+      
+        <h3 id="2-2-1-Integral-Data-Types"   >
+          <a href="#2-2-1-Integral-Data-Types" class="heading-link"><i class="fas fa-link"></i></a>2.2.1 Integral Data Types</h3>
+      <ul>
+<li>c和c++既支持有符号也支持无符号，而java只支持有符号</li>
+</ul>
+
+        <h3 id="2-2-3-Two’s-Complement-Encodings"   >
+          <a href="#2-2-3-Two’s-Complement-Encodings" class="heading-link"><i class="fas fa-link"></i></a>2.2.3 Two’s-Complement Encodings</h3>
+      <ul>
+<li>Definition of two’s-complement encodin($B2T$的意思是Binary to two’s complement):<br>For vector $\vec x = [x_{w-1},x_{w-2},…,x_{0}]$:<br>$$B2T_{x}(\vec x)= -x   <em>{w-1}2^{w-1}+\sum</em>{i=0}^{w-2}x_{i}2^{i}$$</li>
+</ul>
+<ul>
+<li>千古迷案：two’s complement名字的来源是因为一个非负整数x的w-bit的-x的表示可以用$2^{w}-x$(一个2)来计算，而one’s complement名字的来源是因为一个非负整数x的w-bit的-x的表示可以用$[111…1]-x$(很多1)来表示。</li>
+</ul>
+
+        <h2 id="2-3-Integer-Arithmetic"   >
+          <a href="#2-3-Integer-Arithmetic" class="heading-link"><i class="fas fa-link"></i></a>2.3 Integer Arithmetic</h2>
+      
+        <h3 id="2-3-3-Two’s-Complement-Negation"   >
+          <a href="#2-3-3-Two’s-Complement-Negation" class="heading-link"><i class="fas fa-link"></i></a>2.3.3 Two’s-Complement Negation</h3>
+      <p>获得二进制数相反数的两种方法：</p>
+<ul>
+<li>取反加一</li>
+<li>把该数最右边第一个1左边的所有数取反(学到了有木有！！)</li>
+</ul>
+
+        <h3 id="2-3-7-Dividing-by-Powers-of-2"   >
+          <a href="#2-3-7-Dividing-by-Powers-of-2" class="heading-link"><i class="fas fa-link"></i></a>2.3.7 Dividing by Powers of 2</h3>
+      <p>正数向下取整，负数向上取整</p>
+
+        <h2 id="2-4-Floating-Point"   >
+          <a href="#2-4-Floating-Point" class="heading-link"><i class="fas fa-link"></i></a>2.4 Floating Point</h2>
+      
+        <h3 id="2-4-2-IEEE-Floating-Point-Representation"   >
+          <a href="#2-4-2-IEEE-Floating-Point-Representation" class="heading-link"><i class="fas fa-link"></i></a>2.4.2 IEEE Floating-Point Representation</h3>
+      <p><img src="second-blog/1.png" alt=""><br>IEEE的浮点数编码主要有三种情况($V=(-1)^{s} \times frac \times 2^{exp}$)：</p>
+<ul>
+<li><p>Case 1：Normalized Values<br><img src="second-blog/2.png" alt=""><br>首先exp部分既不能全0也不能全1，然后exp = 原本的exp - bias(bias为$2^{k-1}-1$，单精度k是8位，双精度k是11位)。然后frac部分默认是0.xxxx，然后系统会自动给加上1，这样就多一位出来帮忙增加精度啦。</p>
+</li>
+<li><p>Case 2：Denormalized Values<br><img src="second-blog/3.png" alt=""><br>如果exp部分全是0的话那么就是Denormalized Values，此时exp = 1 - bias，frac = 原本的frac，系统不会加1。引入denormalized values的目的有两个：</p>
+<ul>
+<li><ol>
+<li>表示+0.0和-0.0，+0.0就是所有bits全是0，而-0.0就是除了s符号位全是0.</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>表示非常接近0的数字</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>Case 3：Special Values<br><img src="second-blog/4.png" alt=""><br>如果exp部分全部是1的话那么就是Special Values。此时，如果frac全为0，s=1是负无穷，s=0是正无穷。如果frac为非0，则表示NaN。</p>
+</li>
+</ul>
+
+        <h3 id="2-4-4-Rounding"   >
+          <a href="#2-4-4-Rounding" class="heading-link"><i class="fas fa-link"></i></a>2.4.4 Rounding</h3>
+      <p>IEEE有四种rounding的方法，默认是找最接近(round-to-even/round-to-nearest)的数，其余三种是round-toward-zero/round-down/round-up mode。</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ END ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">Author: </span><span class="copyright-author__value"><a href="http://xichentan.com">Xichen Tan</a></span></div><div class="copyright-link"><span class="copyright-link__name">Link: </span><span class="copyright-link__value"><a href="http://xichentan.com/2020/05/17/second-blog/">http://xichentan.com/2020/05/17/second-blog/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">Copyright: </span><span class="copyright-notice__value">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> unless stating additionally</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://xichentan.com/tags/CSAPP/">CSAPP</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/05/17/third-blog/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">k8s，quic，okhttp，bbr浅析</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/05/06/first-blog/"><span class="paginator-prev__text">Chapter1 A Tour of Computer System</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">Catalog</span><span class="sidebar-nav-ov">Overview</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Information-Storage"><span class="toc-number">1.</span> <span class="toc-text">
+          2.1 Information Storage</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-3-Addressing-and-Byte-Ordering"><span class="toc-number">1.1.</span> <span class="toc-text">
+          2.1.3 Addressing and Byte Ordering</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-8-Logical-Operations-in-C"><span class="toc-number">1.2.</span> <span class="toc-text">
+          2.1.8 Logical Operations in C</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-9-Shift-Operations-in-C"><span class="toc-number">1.3.</span> <span class="toc-text">
+          2.1.9 Shift Operations in C</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Integer-Representations"><span class="toc-number">2.</span> <span class="toc-text">
+          2.2 Integer Representations</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-1-Integral-Data-Types"><span class="toc-number">2.1.</span> <span class="toc-text">
+          2.2.1 Integral Data Types</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-3-Two’s-Complement-Encodings"><span class="toc-number">2.2.</span> <span class="toc-text">
+          2.2.3 Two’s-Complement Encodings</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Integer-Arithmetic"><span class="toc-number">3.</span> <span class="toc-text">
+          2.3 Integer Arithmetic</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-3-Two’s-Complement-Negation"><span class="toc-number">3.1.</span> <span class="toc-text">
+          2.3.3 Two’s-Complement Negation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-7-Dividing-by-Powers-of-2"><span class="toc-number">3.2.</span> <span class="toc-text">
+          2.3.7 Dividing by Powers of 2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-4-Floating-Point"><span class="toc-number">4.</span> <span class="toc-text">
+          2.4 Floating Point</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-2-IEEE-Floating-Point-Representation"><span class="toc-number">4.1.</span> <span class="toc-text">
+          2.4.2 IEEE Floating-Point Representation</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-4-Rounding"><span class="toc-number">4.2.</span> <span class="toc-text">
+          2.4.4 Rounding</span></a></li></ol></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/yiquan.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">show me your code</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">7</div><div class="sidebar-ov-state-item__name">Archives</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">Categories</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">3</div><div class="sidebar-ov-state-item__name">Tags</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="Creative Commons" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">You have read </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Xichen Tan</span></div><div><span>Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a></span><span> v4.2.1</span><span class="footer__devider">|</span><span>Theme - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.0.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css"><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.min.js"></script><script src="/js/utils.js?v=2.0.0"></script><script src="/js/stun-boot.js?v=2.0.0"></script><script src="/js/scroll.js?v=2.0.0"></script><script src="/js/header.js?v=2.0.0"></script><script src="/js/sidebar.js?v=2.0.0"></script></body></html>

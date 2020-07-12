@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="当我们用segmentation把物理地址切分成很多小的可用空间之后，缺少连续的足够的地址空间成为了新的问题。                     17.2 Low-level Mechanisms">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter 17 Free-Space Management">
+<meta property="og:url" content="http://xichentan.com/2020/07/04/16th-blog/index.html">
+<meta property="og:site_name" content="Xichen Tan">
+<meta property="og:description" content="当我们用segmentation把物理地址切分成很多小的可用空间之后，缺少连续的足够的地址空间成为了新的问题。                     17.2 Low-level Mechanisms">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://xichentan.com/2020/07/04/16th-blog/1.png">
+<meta property="article:published_time" content="2020-07-04T20:37:40.000Z">
+<meta property="article:modified_time" content="2020-07-05T18:37:18.574Z">
+<meta property="article:author" content="Xichen Tan">
+<meta property="article:tag" content="OS Three Easy Pieces">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xichentan.com/2020/07/04/16th-blog/1.png"><meta name="keywords" content="Xichen Tan, Xichen Tan"><meta name="description" content=""><title>Chapter 17 Free-Space Management | Xichen Tan</title><link ref="canonical" href="http://xichentan.com/2020/07/04/16th-blog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"Copy","copySuccess":"Copy Success","copyError":"Copy Error"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">Home</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">Archives</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">Categories</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">Tags</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Xichen Tan</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Chapter 17 Free-Space Management</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">Created</span><span class="post-meta-item__value">2020-07-04</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">Updated</span><span class="post-meta-item__value">2020-07-05</span></span></div></header><div class="post-body"><p>当我们用segmentation把物理地址切分成很多小的可用空间之后，缺少连续的足够的地址空间成为了新的问题。</p>
+
+        <h2 id="172-low-level-mechanisms"   >
+          <a href="#172-low-level-mechanisms" class="heading-link"><i class="fas fa-link"></i></a>17.2 Low-level Mechanisms</h2>
+      
+<a id="more"></a>
+<p>用一个free list来记录free space，free list可以分裂（splitting）也可以合并（coalescing，释放的内存和其他内存是相邻的）。</p>
+<p>当C语言调用malloc()的时候实际上的操作如下：<br />
+<img src="1.png" alt="" /><br />
+程序会找一个header和开辟的空间大小之和的空闲的地址空间来存放数据，而size用来存放malloc开辟的空间大小，方便后续的free。</p>
+
+        <h2 id="173-basic-strategies"   >
+          <a href="#173-basic-strategies" class="heading-link"><i class="fas fa-link"></i></a>17.3 Basic Strategies</h2>
+      
+<p>一些用于管理free space的策略。</p>
+<ul>
+<li>
+<p>Best Fit<br />
+通过遍历free list找到离request space最接近的block并返回。</p>
+</li>
+<li>
+<p>Worst Fit<br />
+遍历free list，找到比request space大的block中最大的那个并返回。</p>
+</li>
+<li>
+<p>First Fit<br />
+找到free list中第一个比需要的空间大的地址空间。</p>
+</li>
+<li>
+<p>Next Fit<br />
+找到第二个足够大的地址空间，目的是为了分配的更加均匀，相较于first fit。</p>
+</li>
+</ul>
+<p>下面是一些更加复杂的内存管理策略：</p>
+<ul>
+<li>
+<p>Segregated Lists<br />
+对于一些特定的程序，如果他们老是频繁的请求一些固定大小的内存空间，那么用一个allocator来专门管理他们，和其他大小的内存请求分开，这样可以减少fragmentation的发生。</p>
+</li>
+<li>
+<p>Buddy Allocation<br />
+又叫binary buddy allocation，二分缩小可用的地址空间，直到找到可用的最小的地址空间，这样做主要是在地址合并的时候很方便快捷，因为地址大小都是2的倍数，相当于只相差了一个bit。</p>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ END ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">Author: </span><span class="copyright-author__value"><a href="http://xichentan.com">Xichen Tan</a></span></div><div class="copyright-link"><span class="copyright-link__name">Link: </span><span class="copyright-link__value"><a href="http://xichentan.com/2020/07/04/16th-blog/">http://xichentan.com/2020/07/04/16th-blog/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">Copyright: </span><span class="copyright-notice__value">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> unless stating additionally</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://xichentan.com/tags/OS-Three-Easy-Pieces/">OS Three Easy Pieces</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/07/05/17th-blog/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">Chapter 18 Paging_Introduction</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/07/02/15th-blog/"><span class="paginator-prev__text">Chapter 16 Segmentation</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">Catalog</span><span class="sidebar-nav-ov">Overview</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#172-low-level-mechanisms"><span class="toc-number">1.</span> <span class="toc-text">
+          17.2 Low-level Mechanisms</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#173-basic-strategies"><span class="toc-number">2.</span> <span class="toc-text">
+          17.3 Basic Strategies</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/yiquan.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">show me your code</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">19</div><div class="sidebar-ov-state-item__name">Archives</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">Categories</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">Tags</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="Creative Commons" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">You have read </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Xichen Tan</span></div><div><span>Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a></span><span> v4.2.1</span><span class="footer__devider">|</span><span>Theme - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.0.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css"><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.min.js"></script><script src="/js/utils.js?v=2.0.0"></script><script src="/js/stun-boot.js?v=2.0.0"></script><script src="/js/scroll.js?v=2.0.0"></script><script src="/js/header.js?v=2.0.0"></script><script src="/js/sidebar.js?v=2.0.0"></script></body></html>

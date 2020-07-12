@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="19.1 TLB（translation-lookaside buffer） Basic Algorithm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter 19 Paging_Faster Translations(TLBs)">
+<meta property="og:url" content="http://xichentan.com/2020/07/05/18th-blog/index.html">
+<meta property="og:site_name" content="Xichen Tan">
+<meta property="og:description" content="19.1 TLB（translation-lookaside buffer） Basic Algorithm">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://xichentan.com/2020/07/05/18th-blog/1.png">
+<meta property="article:published_time" content="2020-07-06T00:54:06.000Z">
+<meta property="article:modified_time" content="2020-07-08T03:47:22.657Z">
+<meta property="article:author" content="Xichen Tan">
+<meta property="article:tag" content="OS Three Easy Pieces">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xichentan.com/2020/07/05/18th-blog/1.png"><meta name="keywords" content="Xichen Tan, Xichen Tan"><meta name="description" content=""><title>Chapter 19 Paging_Faster Translations(TLBs) | Xichen Tan</title><link ref="canonical" href="http://xichentan.com/2020/07/05/18th-blog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"Copy","copySuccess":"Copy Success","copyError":"Copy Error"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">Home</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">Archives</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">Categories</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">Tags</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Xichen Tan</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Chapter 19 Paging_Faster Translations(TLBs)</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">Created</span><span class="post-meta-item__value">2020-07-05</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">Updated</span><span class="post-meta-item__value">2020-07-07</span></span></div></header><div class="post-body">
+        <h2 id="191-tlbtranslation-lookaside-buffer-basic-algorithm"   >
+          <a href="#191-tlbtranslation-lookaside-buffer-basic-algorithm" class="heading-link"><i class="fas fa-link"></i></a>19.1 TLB（translation-lookaside buffer） Basic Algorithm</h2>
+      
+<a id="more"></a>
+<p>翻译先去TLB找，TLB没有去主内存找，找到了同时更新TLB，所以我们要做的就是尽可能的避免TLB misses，增加TLB hits。</p>
+<ul>
+<li>Aside：<br />
+两种基本的locality：</li>
+</ul>
+<blockquote>
+<p>temporal locality：现在访问的数据将来可能也会被访问到<br />
+spatial locality：就近访问</p>
+</blockquote>
+
+        <h2 id="193-who-handles-the-tlb-miss"   >
+          <a href="#193-who-handles-the-tlb-miss" class="heading-link"><i class="fas fa-link"></i></a>19.3 Who Handles The TLB Miss？</h2>
+      
+<p>早期<strong>CISC</strong>（complex-instruction set computers）都是hardware控制，硬件去找到page table并且更新TLB。但是更多现代的计算机系统<strong>RISC</strong>（reduced-instruction set computers），都是软硬结合，硬件系统抛出异常，切换到kernel mode然后交给OS的trap handler控制。</p>
+
+        <h2 id="194-tlb-contents"   >
+          <a href="#194-tlb-contents" class="heading-link"><i class="fas fa-link"></i></a>19.4 TLB Contents</h2>
+      
+<p>VPN | PFN | other bits（e.g. valid、protection、address-space identifier、dirty bit）</p>
+
+        <h2 id="195-tlb-issuecontext-switches"   >
+          <a href="#195-tlb-issuecontext-switches" class="heading-link"><i class="fas fa-link"></i></a>19.5 TLB Issue：Context Switches</h2>
+      
+<p>在进行processes之间切换的时候我们需要想办法来防止不同的process串用<br />
+TLB。主要有一下几种方法：</p>
+<ul>
+<li>flush the TLB：每次切换的时候清空TLB</li>
+<li>引入ASID(address space identifier)来实现TLB共享，不同的process对应不同的ASID，类似于PID(process identifier)</li>
+</ul>
+
+        <h2 id="196-issuereplacement-policy"   >
+          <a href="#196-issuereplacement-policy" class="heading-link"><i class="fas fa-link"></i></a>19.6 Issue：Replacement Policy</h2>
+      
+<p>先说两个常用的：</p>
+<ul>
+<li>least-recently-used</li>
+<li>random</li>
+</ul>
+
+        <h2 id="197-a-real-tlb-entry"   >
+          <a href="#197-a-real-tlb-entry" class="heading-link"><i class="fas fa-link"></i></a>19.7 A Real TLB Entry</h2>
+      
+<p>如下图：<br />
+<img src="1.png" alt="" /><br />
+G-global bit：进程共享<br />
+ASID：OS用来区分不同进程<br />
+C-coherence：决定page是怎么被硬件缓存的<br />
+D-dirty bit：page被写的时候就标记<br />
+V-valid：是不是有效的翻译</p>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ END ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">Author: </span><span class="copyright-author__value"><a href="http://xichentan.com">Xichen Tan</a></span></div><div class="copyright-link"><span class="copyright-link__name">Link: </span><span class="copyright-link__value"><a href="http://xichentan.com/2020/07/05/18th-blog/">http://xichentan.com/2020/07/05/18th-blog/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">Copyright: </span><span class="copyright-notice__value">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> unless stating additionally</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://xichentan.com/tags/OS-Three-Easy-Pieces/">OS Three Easy Pieces</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/07/08/19th-blog/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">19th-blog</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/07/05/17th-blog/"><span class="paginator-prev__text">Chapter 18 Paging_Introduction</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">Catalog</span><span class="sidebar-nav-ov">Overview</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#191-tlbtranslation-lookaside-buffer-basic-algorithm"><span class="toc-number">1.</span> <span class="toc-text">
+          19.1 TLB（translation-lookaside buffer） Basic Algorithm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#193-who-handles-the-tlb-miss"><span class="toc-number">2.</span> <span class="toc-text">
+          19.3 Who Handles The TLB Miss？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#194-tlb-contents"><span class="toc-number">3.</span> <span class="toc-text">
+          19.4 TLB Contents</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#195-tlb-issuecontext-switches"><span class="toc-number">4.</span> <span class="toc-text">
+          19.5 TLB Issue：Context Switches</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#196-issuereplacement-policy"><span class="toc-number">5.</span> <span class="toc-text">
+          19.6 Issue：Replacement Policy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#197-a-real-tlb-entry"><span class="toc-number">6.</span> <span class="toc-text">
+          19.7 A Real TLB Entry</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/yiquan.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">show me your code</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">19</div><div class="sidebar-ov-state-item__name">Archives</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">Categories</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">Tags</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="Creative Commons" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">You have read </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Xichen Tan</span></div><div><span>Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a></span><span> v4.2.1</span><span class="footer__devider">|</span><span>Theme - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.0.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css"><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.min.js"></script><script src="/js/utils.js?v=2.0.0"></script><script src="/js/stun-boot.js?v=2.0.0"></script><script src="/js/scroll.js?v=2.0.0"></script><script src="/js/header.js?v=2.0.0"></script><script src="/js/sidebar.js?v=2.0.0"></script></body></html>

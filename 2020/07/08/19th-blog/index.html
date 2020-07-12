@@ -1,12 +1,12 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="linear page tables在进程多的时候占用的内存空间过大，因此我们要想办法减小他。                     20.1 Simple Solution：Bigger Pages        纯粹的加大page的大小，这样page table entry的数量也会相应的减少，但是不足之处也很明显，page太大的话，会造成很多的internal fragmentation，">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="linear page tables在进程多的时候占用的内存空间过大，因此我们要想办法减小他。                     20.1 Simple Solution：Bigger Pages">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chapter 20 Paging_Smaller Tables">
 <meta property="og:url" content="http://xichentan.com/2020/07/08/19th-blog/index.html">
 <meta property="og:site_name" content="Xichen Tan">
-<meta property="og:description" content="linear page tables在进程多的时候占用的内存空间过大，因此我们要想办法减小他。                     20.1 Simple Solution：Bigger Pages        纯粹的加大page的大小，这样page table entry的数量也会相应的减少，但是不足之处也很明显，page太大的话，会造成很多的internal fragmentation，">
+<meta property="og:description" content="linear page tables在进程多的时候占用的内存空间过大，因此我们要想办法减小他。                     20.1 Simple Solution：Bigger Pages">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-07-08T19:32:20.000Z">
-<meta property="article:modified_time" content="2020-07-12T04:32:52.007Z">
+<meta property="article:modified_time" content="2020-07-12T04:36:33.607Z">
 <meta property="article:author" content="Xichen Tan">
 <meta property="article:tag" content="OS Three Easy Pieces">
 <meta name="twitter:card" content="summary"><meta name="keywords" content="Xichen Tan, Xichen Tan"><meta name="description" content=""><title>Chapter 20 Paging_Smaller Tables | Xichen Tan</title><link ref="canonical" href="http://xichentan.com/2020/07/08/19th-blog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0"><script>var Stun = window.Stun || {};
@@ -37,6 +37,7 @@ window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></he
         <h2 id="201-simple-solutionbigger-pages"   >
           <a href="#201-simple-solutionbigger-pages" class="heading-link"><i class="fas fa-link"></i></a>20.1 Simple Solution：Bigger Pages</h2>
       
+<a id="more"></a>
 <p>纯粹的加大page的大小，这样page table entry的数量也会相应的减少，但是不足之处也很明显，page太大的话，会造成很多的internal fragmentation，因为应用实际上用不到这么大的空间。</p>
 
         <h2 id="202-hybrid-approachpaging-and-segments"   >

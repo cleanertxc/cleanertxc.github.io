@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="format-detection" content="telephone=no"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="16x16"><link rel="icon" href="/assets/yiquan.jpg?v=2.0.0" type="image/png" sizes="32x32"><meta name="description" content="4.1 The Abstraction: A Process">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chapter 4 The Abstraction — The Process">
+<meta property="og:url" content="http://xichentan.com/2020/05/22/4th-blog/index.html">
+<meta property="og:site_name" content="Xichen Tan">
+<meta property="og:description" content="4.1 The Abstraction: A Process">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/1.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/2.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/3.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/4.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/5.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/6.png">
+<meta property="og:image" content="http://xichentan.com/2020/05/22/4th-blog/7.png">
+<meta property="article:published_time" content="2020-05-21T19:09:11.000Z">
+<meta property="article:modified_time" content="2020-06-09T19:30:19.204Z">
+<meta property="article:author" content="Xichen Tan">
+<meta property="article:tag" content="OS Three Easy Pieces">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://xichentan.com/2020/05/22/4th-blog/1.png"><meta name="keywords" content="Xichen Tan, Xichen Tan"><meta name="description" content=""><title>Chapter 4 The Abstraction — The Process | Xichen Tan</title><link ref="canonical" href="http://xichentan.com/2020/05/22/4th-blog/"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.12.1/css/all.min.css" type="text/css"><link rel="stylesheet" href="/css/index.css?v=2.0.0"><script>var Stun = window.Stun || {};
+var CONFIG = {
+  root: '/',
+  algolia: undefined,
+  fontIcon: {"prompt":{"success":"fas fa-check-circle","info":"fas fa-arrow-circle-right","warning":"fas fa-exclamation-circle","error":"fas fa-times-circle"},"copyBtn":"fas fa-copy"},
+  sidebar: {"offsetTop":"20px","tocMaxDepth":6},
+  header: {"enable":true,"showOnPost":true,"scrollDownIcon":true},
+  postWidget: {"endText":true},
+  nightMode: {"enable":true},
+  back2top: {"enable":true},
+  codeblock: {"style":"default","highlight":"light","wordWrap":false},
+  reward: false,
+  fancybox: false,
+  zoomImage: {"gapAside":"20px"},
+  galleryWaterfall: undefined,
+  lazyload: false,
+  pjax: undefined,
+  externalLink: {"icon":{"enable":true,"name":"fas fa-external-link-alt"}},
+  shortcuts: undefined,
+  prompt: {"copyButton":"Copy","copySuccess":"Copy Success","copyError":"Copy Error"},
+  sourcePath: {"js":"js","css":"css","images":"images"},
+};
+
+window.CONFIG = CONFIG;</script><meta name="generator" content="Hexo 4.2.1"></head><body><div class="container" id="container"><header class="header" id="header"><div class="header-inner"><nav class="header-nav header-nav--fixed"><div class="header-nav-inner"><div class="header-nav-menubtn"><i class="fas fa-bars"></i></div><div class="header-nav-menu"><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/"><span class="header-nav-menu-item__icon"><i class="fas fa-home"></i></span><span class="header-nav-menu-item__text">Home</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/archives/"><span class="header-nav-menu-item__icon"><i class="fas fa-folder-open"></i></span><span class="header-nav-menu-item__text">Archives</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/categories/"><span class="header-nav-menu-item__icon"><i class="fas fa-layer-group"></i></span><span class="header-nav-menu-item__text">Categories</span></a></div><div class="header-nav-menu-item"><a class="header-nav-menu-item__link" href="/tags/"><span class="header-nav-menu-item__icon"><i class="fas fa-tags"></i></span><span class="header-nav-menu-item__text">Tags</span></a></div></div><div class="header-nav-mode"><div class="mode"><div class="mode-track"><span class="mode-track-moon"></span><span class="mode-track-sun"></span></div><div class="mode-thumb"></div></div></div></div></nav><div class="header-banner"><div class="header-banner-info"><div class="header-banner-info__title">Xichen Tan</div><div class="header-banner-info__subtitle"></div></div><div class="header-banner-arrow"><div class="header-banner-arrow__icon"><i class="fas fa-angle-down"></i></div></div></div></div></header><main class="main" id="main"><div class="main-inner"><div class="content-wrap" id="content-wrap"><div class="content" id="content"><!-- Just used to judge whether it is an article page--><div id="is-post"></div><div class="post"><header class="post-header"><h1 class="post-title">Chapter 4 The Abstraction — The Process</h1><div class="post-meta"><span class="post-meta-item post-meta-item--createtime"><span class="post-meta-item__icon"><i class="far fa-calendar-plus"></i></span><span class="post-meta-item__info">Created</span><span class="post-meta-item__value">2020-05-22</span></span><span class="post-meta-item post-meta-item--updatetime"><span class="post-meta-item__icon"><i class="far fa-calendar-check"></i></span><span class="post-meta-item__info">Updated</span><span class="post-meta-item__value">2020-06-10</span></span></div></header><div class="post-body">
+        <h2 id="4-1-The-Abstraction-A-Process"   >
+          <a href="#4-1-The-Abstraction-A-Process" class="heading-link"><i class="fas fa-link"></i></a>4.1 The Abstraction: A Process</h2>
+      <a id="more"></a>
+<p>Machine state of a process:</p>
+<ul>
+<li>memory： 存指令和数据</li>
+<li>registers：指令需要读写更新寄存器(如program counter，stack pointer和frame pointer)</li>
+</ul>
+
+        <h2 id="4-2-Process-API"   >
+          <a href="#4-2-Process-API" class="heading-link"><i class="fas fa-link"></i></a>4.2 Process API</h2>
+      <ul>
+<li>Create：创建新的进程</li>
+<li>Destroy：销毁进程</li>
+<li>Wait：进程等待</li>
+<li>Miscellaneous Control：其他的调度比如挂起和恢复</li>
+<li>Status：查询进程信息</li>
+</ul>
+
+        <h2 id="4-3-Process-Creation：A-Little-More-Detail"   >
+          <a href="#4-3-Process-Creation：A-Little-More-Detail" class="heading-link"><i class="fas fa-link"></i></a>4.3 Process Creation：A Little More Detail</h2>
+      <p>在UNIX系统中，每个进程默认有3中file descriptors，for standard input，output，和error。</p>
+
+        <h2 id="4-4-Process-States"   >
+          <a href="#4-4-Process-States" class="heading-link"><i class="fas fa-link"></i></a>4.4 Process States</h2>
+      <p>简单来说，一个进程可以有以下三种状态：</p>
+<ul>
+<li>Running：The process is running on a processor</li>
+<li>Ready：A process is ready to run but not running yet</li>
+<li>Blocked：process等待其他事件发生才能运行</li>
+</ul>
+
+        <h2 id="4-5-Data-Structures"   >
+          <a href="#4-5-Data-Structures" class="heading-link"><i class="fas fa-link"></i></a>4.5 Data Structures</h2>
+      <p>Process control block(PCB)可以储存一个process的信息，方便在不同的process之间切换，这些信息包括address space，CPU resister信息等等。</p>
+
+        <h2 id="4-6-Homework"   >
+          <a href="#4-6-Homework" class="heading-link"><i class="fas fa-link"></i></a>4.6 Homework</h2>
+      <ul>
+<li><p>Run process-run.pywith the following flags: -l 5:100,5:100. What should the CPU utilization be (e.g., the percent of time the CPU is in use?) Why do you know this? Use the -c and -p flags to see if you were right.<br><img src="1.png" alt=""><br>CPU使用率为100%，IO进程为0。</p>
+</li>
+<li><p>Now run with these flags: ./process-run.py -l 4:100,1:0. These flags specify one process with 4 instructions (all to use the CPU), and one that simply issues an I/O and waits for it to be done. How long does it take to complete both processes? Use -c and -p to find out if you were right.<br><img src="2.png" alt=""><br>CPU占用50%，I/O占用40%。</p>
+</li>
+<li><p>Switch the order of the processes: -l 1:0,4:100. What happens now? Does switching the order matter? Why? (As always, use -c and -p to see if you were right)<br><img src="3.png" alt=""><br>在等待I/O的时候process1也可以运行了，提高了运行效率。</p>
+</li>
+<li><p>We’ll now explore some of the other flags. One important flag is -S, which determines how the system reacts when a process issues an I/O. With the flag set to SWITCH ON END, the system will NOT switch to another process while one is doing I/O, instead waiting until the process is completely finished. What happens when you run the following two processes (-l 1:0,4:100 -c -S SWITCH_ON_END), one doing I/O and the other doing CPU work?<br><img src="4.png" alt=""><br>在进程0等待I/O的时候进程1不能运行</p>
+</li>
+<li><p>Now, run the same processes, but with the switching behavior set to switch to another process whenever one is WAITING for I/O (-l 1:0,4:100 -c -S SWITCH_ON_IO).What happens now? Use -c and -p to confirm that you are right.<br><img src="5.png" alt=""><br>在进程0等待I/O的时候进程1可以运行</p>
+</li>
+<li><p>One other important behavior is what to do when an I/O completes. With -I IO_RUN_LATER, when an I/O completes, the process that issued it is not necessarily run right away; rather,whatever was running at the time keeps running. What happens when you run this combination of processes? (Run ./process-run.py -l 3:0,5:100,5:100,5:100 -S SWITCH_ON_IO -I IO_RUN_LATER -c -p) Are system resources being effectively utilized?<br><img src="6.png" alt=""><br>Process0 跑完第一个I/O之后等待其他三个进程跑完之后才继续跑剩下的I/O。</p>
+</li>
+<li><p>Now run the same processes, but with -I IO_RUN_IMMEDIATE set, which immediately runs the process that issued the I/O. How does this behavior differ? Why might running a process that just completed an I/O again be a good idea?<br><img src="7.png" alt=""><br>现在除了process0之外的进程也可以在其等待I/O的时候运行了，提高了效率。</p>
+</li>
+</ul>
+</div><footer class="post-footer"><div class="post-ending ending"><div class="ending__text">------ END ------</div></div><div class="post-copyright copyright"><div class="copyright-author"><span class="copyright-author__name">Author: </span><span class="copyright-author__value"><a href="http://xichentan.com">Xichen Tan</a></span></div><div class="copyright-link"><span class="copyright-link__name">Link: </span><span class="copyright-link__value"><a href="http://xichentan.com/2020/05/22/4th-blog/">http://xichentan.com/2020/05/22/4th-blog/</a></span></div><div class="copyright-notice"><span class="copyright-notice__name">Copyright: </span><span class="copyright-notice__value">All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" rel="external nofollow" target="_blank">BY-NC-SA</a> unless stating additionally</span></div></div><div class="post-tags"><span class="post-tags-item"><span class="post-tags-item__icon"><i class="fas fa-tag"></i></span><a class="post-tags-item__link" href="http://xichentan.com/tags/OS-Three-Easy-Pieces/">OS Three Easy Pieces</a></span></div><nav class="post-paginator paginator"><div class="paginator-prev"><a class="paginator-prev__link" href="/2020/05/22/5th-blog/"><span class="paginator-prev__icon"><i class="fas fa-angle-left"></i></span><span class="paginator-prev__text">go入门指南</span></a></div><div class="paginator-next"><a class="paginator-next__link" href="/2020/05/18/third-blog/"><span class="paginator-prev__text">k8s，quic，okhttp，bbr浅析</span><span class="paginator-next__icon"><i class="fas fa-angle-right"></i></span></a></div></nav></footer></div></div></div><div class="sidebar-wrap" id="sidebar-wrap"><aside class="sidebar" id="sidebar"><div class="sidebar-nav"><span class="sidebar-nav-toc current">Catalog</span><span class="sidebar-nav-ov">Overview</span></div><section class="sidebar-toc"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-The-Abstraction-A-Process"><span class="toc-number">1.</span> <span class="toc-text">
+          4.1 The Abstraction: A Process</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-Process-API"><span class="toc-number">2.</span> <span class="toc-text">
+          4.2 Process API</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-Process-Creation：A-Little-More-Detail"><span class="toc-number">3.</span> <span class="toc-text">
+          4.3 Process Creation：A Little More Detail</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-Process-States"><span class="toc-number">4.</span> <span class="toc-text">
+          4.4 Process States</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-Data-Structures"><span class="toc-number">5.</span> <span class="toc-text">
+          4.5 Data Structures</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-6-Homework"><span class="toc-number">6.</span> <span class="toc-text">
+          4.6 Homework</span></a></li></ol></section><!-- ov = overview--><section class="sidebar-ov hide"><div class="sidebar-ov-author"><div class="sidebar-ov-author__avatar"><img class="sidebar-ov-author__avatar_img" src="/assets/yiquan.jpg" alt="avatar"></div><p class="sidebar-ov-author__text">show me your code</p></div><div class="sidebar-ov-state"><a class="sidebar-ov-state-item sidebar-ov-state-item--posts" href="/archives/"><div class="sidebar-ov-state-item__count">19</div><div class="sidebar-ov-state-item__name">Archives</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--categories" href="/categories/"><div class="sidebar-ov-state-item__count">5</div><div class="sidebar-ov-state-item__name">Categories</div></a><a class="sidebar-ov-state-item sidebar-ov-state-item--tags" href="/tags/"><div class="sidebar-ov-state-item__count">4</div><div class="sidebar-ov-state-item__name">Tags</div></a></div><div class="sidebar-ov-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en" target="_blank" rel="noopener" data-popover="Creative Commons" data-popover-pos="up"><img src="/images/cc-by-nc-sa.svg"></a></div></section><div class="sidebar-reading"><div class="sidebar-reading-info"><span class="sidebar-reading-info__text">You have read </span><span class="sidebar-reading-info__num">0</span></div><div class="sidebar-reading-line"></div></div></aside></div><div class="clearfix"></div></div></main><footer class="footer" id="footer"><div class="footer-inner"><div><span>Copyright © 2020</span><span class="footer__icon"><i class="fas fa-heart"></i></span><span>Xichen Tan</span></div><div><span>Powered by <a href="http://hexo.io/" title="Hexo" target="_blank" rel="noopener">Hexo</a></span><span> v4.2.1</span><span class="footer__devider">|</span><span>Theme - <a href="https://github.com/liuyib/hexo-theme-stun/" title="Stun" target="_blank" rel="noopener">Stun</a></span><span> v2.0.0</span></div></div></footer><div class="loading-bar" id="loading-bar"><div class="loading-bar__progress"></div></div><div class="back2top" id="back2top"><span class="back2top__icon"><i class="fas fa-rocket"></i></span></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@v3.4.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.ui.min.js"></script><script src="https://cdn.jsdelivr.net/npm/canvas-nest.js@1.0.1/dist/canvas-nest.min.js" color="0,0,0" opacity="0.6" count="99" zIndex="-1"></script><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.css" rel="stylesheet" type="text/css"><script src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/contrib/copy-tex.min.js"></script><script src="/js/utils.js?v=2.0.0"></script><script src="/js/stun-boot.js?v=2.0.0"></script><script src="/js/scroll.js?v=2.0.0"></script><script src="/js/header.js?v=2.0.0"></script><script src="/js/sidebar.js?v=2.0.0"></script></body></html>
